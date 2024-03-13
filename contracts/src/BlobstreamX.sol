@@ -6,6 +6,7 @@ import "@blobstream/lib/tree/binary/BinaryMerkleTree.sol";
 
 import {IBlobstreamX} from "./interfaces/IBlobstreamX.sol";
 import {IDAOracle} from "@blobstream/IDAOracle.sol";
+import {DAVerifier, SharesProof} from "@blobstream/lib/verifier/DAVerifier.sol";
 import {TimelockedUpgradeable} from "@succinctx/upgrades/TimelockedUpgradeable.sol";
 import {ISuccinctGateway} from "@succinctx/interfaces/ISuccinctGateway.sol";
 
@@ -279,5 +280,15 @@ contract BlobstreamX is IBlobstreamX, IDAOracle, TimelockedUpgradeable {
         );
 
         return isProofValid;
+    }
+
+    /// @notice Verify the shares to data root proof. This just calls the same function in the
+    /// DAVerifier library.
+    function verifySharesToDataRootTupleRoot(SharesProof memory sharesProof, bytes32 dataRoot)
+        external
+        view
+        returns (bool, DAVerifier.ErrorCodes)
+    {
+        return DAVerifier.verifySharesToDataRootTupleRoot(this, sharesProof, dataRoot);
     }
 }
